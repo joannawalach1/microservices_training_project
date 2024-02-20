@@ -1,2 +1,5 @@
-package org.example.entity;public enum Role {
+package org.example.entity;
+
+public enum Role {
+    ADMIN, USER
 }

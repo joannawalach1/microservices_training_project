@@ -23,10 +23,11 @@ spring:
   liquibase:
     enabled: 'true'
     change-log: classpath:liquibase-changeLog.xml
+jwt:
+  exp: 240000
+  secret: AB8E50CEE980BC7BD72FB9A49B5262AD01FDF92498FF62C1B9E7E9193CCCCE8E
+  refresh:
+    exp: 860000
 
-
-  jwt:
-    exp: 240000
-    secret: AB8E50CEE980BC7BD72FB9A49B5262AD01FDF92498FF62C1B9E7E9193CCCCE8E
 
 

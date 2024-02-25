@@ -4,9 +4,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;
-
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
@@ -33,18 +32,19 @@ public class JWTService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(String userName) {
+    public String generateToken(String username,int exp){
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userName);
-
+        return createToken(claims,username,exp);
     }
 
-    public String createToken(Map<String, Object> claims, String userName) {
+
+    public String createToken(Map<String,Object> claims, String username,int exp){
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(userName)
+                .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+ exp))
+                .setExpiration(new Date(System.currentTimeMillis()+exp))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
+
 }

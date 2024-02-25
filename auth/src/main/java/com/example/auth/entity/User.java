@@ -21,7 +21,7 @@ public class User implements UserDetails {
     private String login;
     private String password;
     private String email;
-    @Enumerated(value= EnumType.STRING)
+    @Enumerated(value = EnumType.STRING)
     private Role role;
     private boolean isLocked;
     private boolean isEnabled;
@@ -55,7 +55,9 @@ public class User implements UserDetails {
     public String getUsername() {
         return login;
     }
-
+    public String getEmail() {
+        return email;
+    }
     @Override
     public boolean isAccountNonExpired() {
         return false;

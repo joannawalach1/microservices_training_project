@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(basePackages = "com.example.auth.repository")
 @ComponentScan("com.example.auth")
 @EntityScan("com.example.auth.entity")
-
 public class AuthApplication {
 
 	public static void main(String[] args) {

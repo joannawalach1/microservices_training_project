@@ -21,10 +21,26 @@ public class User implements UserDetails {
     private String login;
     private String password;
     private String email;
-    @Enumerated(value= EnumType.STRING)
+    @Enumerated(value = EnumType.STRING)
     private Role role;
     private boolean isLocked;
     private boolean isEnabled;
+
+    public User() {
+        generateUuid();
+    }
+
+    public User(long id, String uuid, String login, String password, String email, Role role, boolean isLocked, boolean isEnabled) {
+        this.id = id;
+        this.uuid = uuid;
+        this.login = login;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.isLocked = isLocked;
+        this.isEnabled = isEnabled;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
@@ -39,7 +55,9 @@ public class User implements UserDetails {
     public String getUsername() {
         return login;
     }
-
+    public String getEmail() {
+        return email;
+    }
     @Override
     public boolean isAccountNonExpired() {
         return false;

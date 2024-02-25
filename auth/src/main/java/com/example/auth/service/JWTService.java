@@ -4,6 +4,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -13,16 +14,17 @@ import java.util.Map;
 
 @Component
 public class JWTService {
-    public final String SECRET;
-    private final int EXP;
-
-    public JWTService(String secret, int exp) {
+    public void JwtService(@Value("${jwt.secret}") String secret, @Value("${jwt.exp}") int exp){
         SECRET = secret;
-        EXP = exp;
+        this.exp = exp;
     }
 
+    public String SECRET;
+    private int exp;
+
+
     public void validateToken(final String token) {
-        Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
+        Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(String.valueOf(token));
     }
 
     private Key getSigningKey() {
@@ -30,18 +32,33 @@ public class JWTService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(String userName) {
+    public String generateToken(String username,int exp){
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userName);
-
+        return createToken(claims,username,exp);
     }
 
-    public String createToken(Map<String, Object> claims, String userName) {
+
+    public String createToken(Map<String,Object> claims, String username,int exp){
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(userName)
+                .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+ EXP))
+                .setExpiration(new Date(System.currentTimeMillis()+exp))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
+
+    public String getSubject(final String token){
+        return Jwts
+                .parser()
+                .setSigningKey(SECRET)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+    public String refreshToken(final String token, int exp){
+        String username = getSubject(token);
+        return generateToken(username,exp);
+    }
+
+
 }

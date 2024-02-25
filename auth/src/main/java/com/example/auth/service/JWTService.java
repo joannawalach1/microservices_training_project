@@ -24,7 +24,7 @@ public class JWTService {
 
 
     public void validateToken(final String token) {
-        Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
+        Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(String.valueOf(token));
     }
 
     private Key getSigningKey() {
@@ -46,5 +46,19 @@ public class JWTService {
                 .setExpiration(new Date(System.currentTimeMillis()+exp))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
+
+    public String getSubject(final String token){
+        return Jwts
+                .parser()
+                .setSigningKey(SECRET)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+    public String refreshToken(final String token, int exp){
+        String username = getSubject(token);
+        return generateToken(username,exp);
+    }
+
 
 }

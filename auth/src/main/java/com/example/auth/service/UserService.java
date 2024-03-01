@@ -48,7 +48,7 @@ public class UserService {
     private User saveUser(User user) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
-        return userRepository.saveAndFlush(user);
+        return userRepository.save(user);
     }
 
     public String generateToken(String userName, int refreshExp) {
@@ -83,6 +83,7 @@ public class UserService {
                                 .builder()
                                 .login(user.getUsername())
                                 .email(user.getEmail())
+                                .role(user.getRole())
                                 .build());
             } else {
                 ResponseEntity.ok(new AuthResponse(Code.A1));

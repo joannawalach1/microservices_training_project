@@ -23,24 +23,30 @@ public class User implements UserDetails {
     private String email;
     @Enumerated(value = EnumType.STRING)
     private Role role;
-    private boolean isLocked;
-    private boolean isEnabled;
+    private boolean is_locked;
+    private boolean is_enabled;
 
     public User() {
         generateUuid();
     }
 
-    public User(long id, String uuid, String login, String password, String email, Role role, boolean isLocked, boolean isEnabled) {
+    public User(long id, String uuid, String login, String password, String email, Role role, boolean is_locked, boolean is_enabled) {
         this.id = id;
         this.uuid = uuid;
         this.login = login;
         this.password = password;
         this.email = email;
         this.role = role;
-        this.isLocked = isLocked;
-        this.isEnabled = isEnabled;
+        this.is_locked = is_locked;
+        this.is_enabled = is_enabled;
     }
 
+    @PrePersist
+    private void generateUuid() {
+        if (uuid == null || uuid.isEmpty()) {
+            uuid = UUID.randomUUID().toString();
+        }
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
@@ -65,7 +71,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return isLocked;
+        return is_locked;
     }
 
     @Override
@@ -75,10 +81,9 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return isEnabled;
+        return is_enabled;
     }
 
-    public String generateUuid() {
-        return UUID.randomUUID().toString();
+    public Role getRole() {return role;
     }
 }

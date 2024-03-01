@@ -3,14 +3,17 @@ package com.example.auth.fasada;
 import com.example.auth.entity.AuthResponse;
 import com.example.auth.entity.Code;
 import com.example.auth.entity.User;
+import com.example.auth.entity.ValidationMessage;
 import com.example.auth.entity.dto.UserRegisterDto;
 import com.example.auth.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,7 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/addUser")
-    public ResponseEntity<AuthResponse> addNewUser(@RequestBody UserRegisterDto userRegisterDto) {
+    public ResponseEntity<AuthResponse> addNewUser(@Valid @RequestBody UserRegisterDto userRegisterDto) {
         User register = userService.register(userRegisterDto);
         return ResponseEntity.ok(new AuthResponse(Code.SUCCESS));
     }
@@ -51,4 +54,12 @@ public class AuthController {
         }
     }
 
-}
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ValidationMessage handleValidationExceptions(
+        MethodArgumentNotValidException ex
+                ){
+    return new ValidationMessage(ex.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+        }
+    }
+

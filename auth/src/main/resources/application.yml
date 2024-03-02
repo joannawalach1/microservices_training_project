@@ -17,6 +17,8 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
+flyway:
+  ignore-migration-patterns: "*:missing"
   sql:
     init:
       mode: always

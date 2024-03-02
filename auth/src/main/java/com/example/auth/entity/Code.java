@@ -1,11 +1,14 @@
 package com.example.auth.entity;
 
 public enum Code {
-    SUCCESS("message"),
-    A1("user logged in"),
-    A2("user not found"),
+    SUCCESS("Operacja zakończona powidzeniem"),
+    A1("Nie udało się zalogować"),
+    A2("Użytkownik o tej nazwie już istnieje"),
+    A3("Wskazany token jest pusty lub nieważny"),
+    A4("Użytkownik o tym emailu już istnieje"),
+    A5("Użytkownik o tej nazwie już istnieje"),
     LOGIN_FAILED("login failed"),
-    PERMIT("permitted");
+    PERMIT("Przyznano dostęp");
     public String label;
 
     private Code(String label) {

@@ -4,6 +4,8 @@ import com.example.auth.entity.AuthResponse;
 import com.example.auth.entity.Code;
 import com.example.auth.entity.User;
 import com.example.auth.entity.dto.UserRegisterDto;
+import com.example.auth.exceptions.ExistingUserWithEmail;
+import com.example.auth.exceptions.ExistingUserWithName;
 import com.example.auth.repository.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
@@ -48,7 +50,7 @@ public class UserService {
     private User saveUser(User user) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
-        return userRepository.saveAndFlush(user);
+        return userRepository.save(user);
     }
 
     public String generateToken(String userName, int refreshExp) {
@@ -59,7 +61,13 @@ public class UserService {
         jwtService.validateToken(token);
     }
 
-    public User register(UserRegisterDto userRegisterDto) {
+    public User register(UserRegisterDto userRegisterDto) throws ExistingUserWithName {
+        userRepository.findUserByLogin(userRegisterDto.getLogin()).ifPresent(value -> {
+                    throw new ExistingUserWithName("Użytkownik o tym loginie już istnieje");
+                });
+        userRepository.findUserByEmail(userRegisterDto.getLogin()).ifPresent(value -> {
+            throw new ExistingUserWithEmail("Użytkownik o tym emailu już istnieje");
+        });
         User user = new User();
         user.setLogin(userRegisterDto.getLogin());
         user.setEmail(userRegisterDto.getEmail());
@@ -83,6 +91,7 @@ public class UserService {
                                 .builder()
                                 .login(user.getUsername())
                                 .email(user.getEmail())
+                                .role(user.getRole())
                                 .build());
             } else {
                 ResponseEntity.ok(new AuthResponse(Code.A1));

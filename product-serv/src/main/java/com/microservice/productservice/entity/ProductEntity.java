@@ -4,21 +4,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Set;
 
 @Table(name = "products")
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductEntity extends com.example.productservice.entity.Product {
+public class ProductEntity extends Product {
     @ManyToOne
     @JoinColumn(name = "category_parameters")
     private Category category;

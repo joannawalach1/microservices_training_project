@@ -1,4 +1,4 @@
-package com.example.productservice.entity;
+package com.microservice.productservice.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.Map;
-
 
 @Getter
 @Setter
@@ -28,6 +27,6 @@ public class Product {
     private String descHtml;
     private float price;
     private String[] imageUrls;
-    private Map<String, String> parameters;
+    private String parameters;
     private LocalDate createAt;
 }
